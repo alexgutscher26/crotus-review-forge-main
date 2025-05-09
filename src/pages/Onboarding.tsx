@@ -8,6 +8,14 @@ import { useToast } from "@/components/ui/use-toast";
 import { Link } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
+/**
+ * Welcome component for crotus application.
+ *
+ * This component renders a welcome screen and allows users to choose their username.
+ * It provides feedback on username availability and guides the user through the onboarding process.
+ *
+ * @component
+ */
 const OnboardingPage: React.FC = () => {
   const [step, setStep] = useState<number>(1);
   const [username, setUsername] = useState<string>("");
@@ -20,6 +28,9 @@ const OnboardingPage: React.FC = () => {
   const { user, updateProfile } = useAuth();
   const { supabase } = useAuth();
   
+  /**
+   * Moves to the next step by setting it to 2.
+   */
   const handleNext = () => {
     setStep(2);
   };
@@ -40,6 +51,9 @@ const OnboardingPage: React.FC = () => {
     }
   }, [debouncedUsername]);
 
+  /**
+   * Validates a username by checking its length, allowed characters, and uniqueness.
+   */
   const validateUsername = async (username: string) => {
     setIsChecking(true);
     setErrorMessage("");
@@ -90,6 +104,9 @@ const OnboardingPage: React.FC = () => {
     }
   };
 
+  /**
+   * Handles the completion of user onboarding by validating the username and updating the profile.
+   */
   const handleComplete = async () => {
     if (!await validateUsername(username)) {
       toast({
