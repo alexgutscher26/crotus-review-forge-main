@@ -24,6 +24,9 @@ const actionTypes = {
 
 let count = 0
 
+/**
+ * Increments and returns a unique ID as a string.
+ */
 function genId() {
   count = (count + 1) % Number.MAX_SAFE_INTEGER
   return count.toString()
@@ -55,6 +58,9 @@ interface State {
 
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>()
 
+/**
+ * Adds a toast to the removal queue with a specified delay.
+ */
 const addToRemoveQueue = (toastId: string) => {
   if (toastTimeouts.has(toastId)) {
     return
@@ -71,6 +77,9 @@ const addToRemoveQueue = (toastId: string) => {
   toastTimeouts.set(toastId, timeout)
 }
 
+/**
+ * Reducer function to manage toast notifications in the application state.
+ */
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case "ADD_TOAST":
@@ -130,6 +139,9 @@ const listeners: Array<(state: State) => void> = []
 
 let memoryState: State = { toasts: [] }
 
+/**
+ * Dispatches an action to update the memory state and notifies all listeners.
+ */
 function dispatch(action: Action) {
   memoryState = reducer(memoryState, action)
   listeners.forEach((listener) => {
@@ -139,14 +151,23 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, "id">
 
+/**
+ * Creates and manages a toast notification with unique ID, providing update and dismiss functionality.
+ */
 function toast({ ...props }: Toast) {
   const id = genId()
 
+  /**
+   * Dispatches an action to update a toast with the given properties and ID.
+   */
   const update = (props: ToasterToast) =>
     dispatch({
       type: "UPDATE_TOAST",
       toast: { ...props, id },
     })
+  /**
+   * Dispatches an action to dismiss a toast with a specific ID.
+   */
   const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id })
 
   dispatch({
@@ -168,6 +189,9 @@ function toast({ ...props }: Toast) {
   }
 }
 
+/**
+ * Custom hook for managing toasts with state and effect handling.
+ */
 function useToast() {
   const [state, setState] = React.useState<State>(memoryState)
 
