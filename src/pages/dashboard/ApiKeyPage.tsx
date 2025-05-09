@@ -21,6 +21,9 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 
+/**
+ * React component for managing API keys, including generation, display, and copying.
+ */
 const ApiKeyPage: React.FC = () => {
   const { toast } = useToast();
   const { profile } = useAuth();
@@ -30,6 +33,9 @@ const ApiKeyPage: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Function to generate a new API key
+  /**
+   * Generates a new API key with a simulated delay and updates the UI accordingly.
+   */
   const generateApiKey = async () => {
     setIsGenerating(true);
     try {
@@ -57,6 +63,9 @@ const ApiKeyPage: React.FC = () => {
   };
 
   // Function to copy API key to clipboard
+  /**
+   * Copies the API key to the clipboard and shows a success message.
+   */
   const copyToClipboard = () => {
     navigator.clipboard.writeText(apiKey).then(() => {
       setCopied(true);
@@ -69,11 +78,17 @@ const ApiKeyPage: React.FC = () => {
   };
 
   // Function to toggle API key visibility
+  /**
+   * Toggles the visibility of the API key.
+   */
   const toggleApiKeyVisibility = () => {
     setShowApiKey(!showApiKey);
   };
 
   // Mask the API key
+  /**
+   * Masks an API key by showing the first 7 and last 4 characters, with dots in between.
+   */
   const maskApiKey = (key: string) => {
     if (!key) return "";
     const prefix = key.slice(0, 7); // Show 'crotus_'
