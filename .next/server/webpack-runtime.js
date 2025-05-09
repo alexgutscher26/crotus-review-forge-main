@@ -13,8 +13,10 @@
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
 /******/ 	
+/**
+ * Loads and executes a module, caching it if not already loaded.
+ */
 /******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
@@ -129,8 +131,13 @@
 /******/ 		};
 /******/ 		
 /******/ 		// no on chunks loaded
+/**
+ * Installs a webpack chunk by updating module registry and marking chunks as installed.
+ *
+ * This function processes a given chunk, which contains modules and runtime instructions,
+ * to update the webpack's internal module registry and mark specific chunk IDs as installed.
+ */
 /******/ 		
-/******/ 		var installChunk = (chunk) => {
 /******/ 			var moreModules = chunk.modules, chunkIds = chunk.ids, runtime = chunk.runtime;
 /******/ 			for(var moduleId in moreModules) {
 /******/ 				if(__webpack_require__.o(moreModules, moduleId)) {
