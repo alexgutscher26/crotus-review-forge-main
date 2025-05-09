@@ -1,6 +1,9 @@
 
 import React, { useState } from "react";
 
+/**
+ * React functional component for displaying import options from X and YouTube platforms.
+ */
 const ImportPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'x' | 'youtube'>('x');
 
