@@ -22,6 +22,9 @@ type ChartContextProps = {
 
 const ChartContext = React.createContext<ChartContextProps | null>(null)
 
+/**
+ * Custom hook to access the ChartContext.
+ */
 function useChart() {
   const context = React.useContext(ChartContext)
 
@@ -65,6 +68,9 @@ const ChartContainer = React.forwardRef<
 })
 ChartContainer.displayName = "Chart"
 
+/**
+ * Generates a <style> element with theme-specific CSS variables for a chart.
+ */
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
     ([_, config]) => config.theme || config.color
@@ -315,6 +321,18 @@ const ChartLegendContent = React.forwardRef<
 ChartLegendContent.displayName = "ChartLegend"
 
 // Helper to extract item config from a payload.
+/**
+ * Retrieves configuration from a payload based on given keys.
+ *
+ * This function checks if the payload is an object and then looks for nested configurations.
+ * It first checks if the key exists directly in the payload, then in the nested 'payload' object.
+ * If the key exists, it returns the corresponding configuration from the ChartConfig; otherwise, it defaults to the original key.
+ *
+ * @param config - The ChartConfig object containing the configuration settings.
+ * @param payload - The unknown type payload that may contain nested configurations.
+ * @param key - The string key used to look up the configuration in the ChartConfig.
+ * @returns The configuration value from ChartConfig or undefined if not found.
+ */
 function getPayloadConfigFromPayload(
   config: ChartConfig,
   payload: unknown,
