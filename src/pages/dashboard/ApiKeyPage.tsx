@@ -13,16 +13,25 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useToast } from "@/components/ui/use-toast";
 
+/**
+ * React component for displaying and managing API keys with visibility toggle and copy functionality.
+ */
 const ApiKeyPage: React.FC = () => {
   const { toast } = useToast();
   const [apiKey, setApiKey] = useState("sk_test_51NXwpqGUzBgLhC9O2HWP");
   const [showApiKey, setShowApiKey] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  /**
+   * Toggles the visibility of the API key.
+   */
   const toggleApiKeyVisibility = () => {
     setShowApiKey(!showApiKey);
   };
 
+  /**
+   * Copies the API key to the clipboard and shows a success toast notification.
+   */
   const copyToClipboard = () => {
     navigator.clipboard.writeText(apiKey).then(() => {
       setCopied(true);
@@ -34,6 +43,9 @@ const ApiKeyPage: React.FC = () => {
     });
   };
 
+  /**
+   * Masks an API key by replacing each character with a dot.
+   */
   const maskApiKey = (key: string) => {
     return "•".repeat(key.length);
   };
