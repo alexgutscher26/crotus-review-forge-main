@@ -26,6 +26,9 @@ interface ImageUploadState {
   previewUrl: string | null;
 }
 
+/**
+ * A React functional component representing a review form with fields for rating, comments, name, and job title.
+ */
 export const ReviewForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [formData, setFormData] = useState<ReviewFormData>({
     rating: 0,
@@ -123,6 +126,11 @@ export const ReviewForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   );
 };
 
+/**
+ * React component representing a review collection form editor with live preview and dialog options.
+ *
+ * @returns {JSX.Element} - The JSX representation of the ReviewCollectionFormEditor component.
+ */
 const Welcome = () => {
   const [title, setTitle] = useState('Write a review');
   const [greetingText, setGreetingText] = useState(
@@ -163,6 +171,9 @@ const Welcome = () => {
   const [isQRDialogOpen, setIsQRDialogOpen] = useState(false);
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
 
+  /**
+   * Saves welcome page settings and opens a local review URL for testing.
+   */
   const handleSave = () => {
     // Generate a unique review ID for testing
     const reviewId = Math.random().toString(36).substring(2, 15);
