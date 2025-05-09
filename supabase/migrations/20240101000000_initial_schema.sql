@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS public.users (
   username TEXT UNIQUE,
   full_name TEXT,
   avatar_url TEXT,
-  updated_at TIMESTAMP WITH TIME ZONE
+  updated_at TIMESTAMP WITH TIME ZONE,
+  api_key TEXT UNIQUE DEFAULT encode(gen_random_bytes(32), 'hex')
 );
 
 -- Create reviews table
@@ -39,7 +40,13 @@ CREATE POLICY "Users can update their own profile"
   FOR UPDATE 
   USING (auth.uid() = id);
 
--- Create policies for reviews table
+CREATE POLICY "Users can regenerate their own API key" 
+  ON public.users 
+  FOR UPDATE 
+  USING (auth.uid() = id)
+  WITH CHECK (auth.uid() = id);
+
+-- Create policies for reviews tableERROR:  42710: trigger "on_auth_user_created" for relation "users" already exists
 CREATE POLICY "Reviews are viewable by owner" 
   ON public.reviews 
   FOR SELECT 
@@ -70,6 +77,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- Create function to regenerate API key
+CREATE OR REPLACE FUNCTION public.regenerate_api_key(user_id UUID)
+RETURNS VOID AS $$
+BEGIN
+  UPDATE public.users
+  SET api_key = encode(gen_random_bytes(32), 'hex')
+  WHERE id = user_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;

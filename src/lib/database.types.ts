@@ -18,6 +18,7 @@ export interface Database {
           full_name: string | null
           avatar_url: string | null
           updated_at: string | null
+          api_key: string | null
         }
         Insert: {
           id: string
@@ -27,6 +28,7 @@ export interface Database {
           full_name?: string | null
           avatar_url?: string | null
           updated_at?: string | null
+          api_key?: string | null
         }
         Update: {
           id?: string
@@ -36,6 +38,7 @@ export interface Database {
           full_name?: string | null
           avatar_url?: string | null
           updated_at?: string | null
+          api_key?: string | null
         }
       }
       reviews: {
