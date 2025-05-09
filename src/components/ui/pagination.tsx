@@ -4,6 +4,9 @@ import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ButtonProps, buttonVariants } from "@/components/ui/button"
 
+/**
+ * A simple navigation component for pagination with a centered layout.
+ */
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
   <nav
     role="navigation"
@@ -39,6 +42,9 @@ type PaginationLinkProps = {
 } & Pick<ButtonProps, "size"> &
   React.ComponentProps<"a">
 
+/**
+ * Renders a pagination link component with active state styling.
+ */
 const PaginationLink = ({
   className,
   isActive,
@@ -59,6 +65,9 @@ const PaginationLink = ({
 )
 PaginationLink.displayName = "PaginationLink"
 
+/**
+ * Renders a "Previous" pagination link with an arrow icon.
+ */
 const PaginationPrevious = ({
   className,
   ...props
@@ -75,6 +84,9 @@ const PaginationPrevious = ({
 )
 PaginationPrevious.displayName = "PaginationPrevious"
 
+/**
+ * Renders a "Next" pagination link with an arrow icon.
+ */
 const PaginationNext = ({
   className,
   ...props
@@ -91,6 +103,9 @@ const PaginationNext = ({
 )
 PaginationNext.displayName = "PaginationNext"
 
+/**
+ * Renders a pagination ellipsis with an icon and screen reader text.
+ */
 const PaginationEllipsis = ({
   className,
   ...props

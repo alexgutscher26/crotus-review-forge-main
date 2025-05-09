@@ -7,6 +7,9 @@ import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { createUserProfile, supabase } from '@/lib/supabase';
 
+/**
+ * SignupPage component for user registration.
+ */
 const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,6 +19,9 @@ const SignupPage: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  /**
+   * Handles form submission for user signup, including error handling and navigation.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);

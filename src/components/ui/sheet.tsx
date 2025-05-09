@@ -72,6 +72,9 @@ const SheetContent = React.forwardRef<
 ))
 SheetContent.displayName = SheetPrimitive.Content.displayName
 
+/**
+ * Renders a styled header for a sheet component.
+ */
 const SheetHeader = ({
   className,
   ...props
@@ -86,6 +89,9 @@ const SheetHeader = ({
 )
 SheetHeader.displayName = "SheetHeader"
 
+/**
+ * Renders a footer div with flexbox styling for layout flexibility.
+ */
 const SheetFooter = ({
   className,
   ...props

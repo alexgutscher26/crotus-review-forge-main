@@ -3,6 +3,9 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
+/**
+ * Renders a sticky navigation bar with logo, navigation links, and sign-in/get started buttons.
+ */
 const Navbar: React.FC = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white">

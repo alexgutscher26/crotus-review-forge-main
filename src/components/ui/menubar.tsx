@@ -198,6 +198,9 @@ const MenubarSeparator = React.forwardRef<
 ))
 MenubarSeparator.displayName = MenubarPrimitive.Separator.displayName
 
+/**
+ * A functional component that renders a span element with specific styling and additional props.
+ */
 const MenubarShortcut = ({
   className,
   ...props

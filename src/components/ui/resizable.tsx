@@ -3,6 +3,9 @@ import * as ResizablePrimitive from "react-resizable-panels"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * Renders a resizable panel group with custom styles.
+ */
 const ResizablePanelGroup = ({
   className,
   ...props
@@ -18,6 +21,9 @@ const ResizablePanelGroup = ({
 
 const ResizablePanel = ResizablePrimitive.Panel
 
+/**
+ * Renders a resizable handle with an optional grip icon.
+ */
 const ResizableHandle = ({
   withHandle,
   className,

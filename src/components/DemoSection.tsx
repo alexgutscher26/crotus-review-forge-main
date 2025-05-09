@@ -1,9 +1,19 @@
 import React, { useState } from "react";
 import { Copy, Check } from "lucide-react";
 
+/**
+ * This component represents a section that showcases testimonials or reviews for a product, service, or project.
+ * It includes a main testimonial from a user (John Doe) who provides detailed feedback and an overall rating.
+ * Additionally, it features three shorter testimonials from other users, each highlighting specific aspects of the subject being reviewed.
+ *
+ * @returns {JSX.Element} - A React JSX element representing the section layout with embedded testimonials.
+ */
 const DemoSection: React.FC = () => {
   const [copied, setCopied] = useState(false);
 
+  /**
+   * Copies embed script to clipboard and shows copied status.
+   */
   const handleCopy = () => {
     navigator.clipboard.writeText(`<script src="https://cdn.crotus.io/reviews.js"></script>
 <div data-crotus-collection="featured" data-theme="light"></div>`);

@@ -3,6 +3,9 @@ import { Drawer as DrawerPrimitive } from "vaul"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A component that renders a drawer with optional background scaling.
+ */
 const Drawer = ({
   shouldScaleBackground = true,
   ...props
@@ -53,6 +56,9 @@ const DrawerContent = React.forwardRef<
 ))
 DrawerContent.displayName = "DrawerContent"
 
+/**
+ * Renders a drawer header with optional custom class names and props.
+ */
 const DrawerHeader = ({
   className,
   ...props
@@ -64,6 +70,9 @@ const DrawerHeader = ({
 )
 DrawerHeader.displayName = "DrawerHeader"
 
+/**
+ * DrawerFooter component that renders a footer div with default styling and additional props.
+ */
 const DrawerFooter = ({
   className,
   ...props

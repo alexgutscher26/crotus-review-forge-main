@@ -1,6 +1,9 @@
 
 import React from "react";
 
+/**
+ * Renders a placeholder page indicating that a single review feature is coming soon.
+ */
 const SingleReviewPage: React.FC = () => {
   return (
     <div>

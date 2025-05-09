@@ -51,6 +51,9 @@ const DialogContent = React.forwardRef<
 ))
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
+/**
+ * Renders a dialog header with optional custom class names and props.
+ */
 const DialogHeader = ({
   className,
   ...props
@@ -65,6 +68,9 @@ const DialogHeader = ({
 )
 DialogHeader.displayName = "DialogHeader"
 
+/**
+ * Renders a dialog footer with flexbox styling and optional custom class names.
+ */
 const DialogFooter = ({
   className,
   ...props

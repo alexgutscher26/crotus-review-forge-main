@@ -8,20 +8,34 @@ interface ReviewFormData {
 }
 
 // Demo for the Landing Page Dont make it work
+/**
+ * @function ReviewSection
+ * @description A React component that renders a section with different review-related sections: Collect, Embed, and Manage.
+ * @returns {JSX.Element} - The JSX representation of the ReviewSection component.
+ */
 const ReviewCollectionSection: React.FC = () => {
   const [formData, setFormData] = useState<ReviewFormData>({
     rating: 0,
     comment: ""
   });
 
+  /**
+   * Updates the form data with the selected rating index incremented by one.
+   */
   const handleRatingClick = (index: number) => {
     setFormData(prev => ({ ...prev, rating: index + 1 }));
   };
 
+  /**
+   * Updates form data with new comment value from text area change event.
+   */
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setFormData(prev => ({ ...prev, comment: e.target.value }));
   };
 
+  /**
+   * Handles form submission by preventing default behavior, logging review data, and resetting the form.
+   */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Submitting review:", formData);

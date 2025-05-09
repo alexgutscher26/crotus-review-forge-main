@@ -6,6 +6,13 @@ interface ProtectedRouteProps {
   redirectPath?: string;
 }
 
+/**
+ * ProtectedRoute component that checks user authentication and redirects accordingly.
+ *
+ * This component uses the `useAuth` hook to determine if a user is authenticated,
+ * loading, or has completed onboarding. Based on these conditions, it either renders
+ * the child routes or redirects the user to different paths.
+ */
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
   redirectPath = '/login' 
 }) => {

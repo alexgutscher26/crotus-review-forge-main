@@ -14,6 +14,9 @@ type NavItemProps = {
   isNew?: boolean;
 };
 
+/**
+ * Represents a navigation item with an icon, label, and optional "new" badge.
+ */
 const NavItem: React.FC<NavItemProps> = ({ icon, label, path, isNew }) => {
   const location = useLocation();
   const isActive = location.pathname === path;
@@ -39,6 +42,9 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, path, isNew }) => {
   );
 };
 
+/**
+ * A React component that renders a navigation section with a title and children content.
+ */
 const NavSection: React.FC<{title: string, children: React.ReactNode}> = ({ title, children }) => {
   return (
     <div className="mb-8">
@@ -52,11 +58,20 @@ const NavSection: React.FC<{title: string, children: React.ReactNode}> = ({ titl
   );
 };
 
+/**
+ * DashboardSidebar component renders a sidebar navigation menu for the dashboard.
+ * It displays sections with navigation items and includes user profile information and a sign-out button.
+ * Handles sign-out functionality by calling `signOut` from useAuth and navigating to the login page on success,
+ * or showing an error toast if the operation fails.
+ */
 const DashboardSidebar: React.FC = () => {
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  /**
+   * Handles user sign-out process and navigates to login page.
+   */
   const handleSignOut = async () => {
     try {
       const { error } = await signOut();

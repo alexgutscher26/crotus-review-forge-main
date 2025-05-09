@@ -16,6 +16,15 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+/**
+ * Provides authentication context and state management for React components.
+ *
+ * This component manages user session, profile data, and provides methods for
+ * signing in, signing up, signing out, and updating the user profile. It uses
+ * Supabase for authentication and fetches user profiles from a database.
+ * The component ensures that the initial session is loaded and listens for
+ * authentication state changes to update its state accordingly.
+ */
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -55,6 +64,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  /**
+   * Fetches and sets user profile based on userId.
+   */
   const fetchProfile = async (userId: string) => {
     setIsLoading(true);
     const { profile, error } = await getUserProfile(userId);
@@ -68,11 +80,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false);
   };
 
+  /**
+   * Signs in a user with an email and password.
+   */
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     return { error };
   };
 
+  /**
+   * Signs up a user with the provided email and password.
+   */
   const signUp = async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signUp({ email, password });
     
@@ -84,11 +102,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error };
   };
 
+  /**
+   * Signs out the current user and returns any errors encountered.
+   */
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     return { error };
   };
 
+  /**
+   * Updates the user profile with the provided data.
+   */
   const updateProfile = async (updates: any) => {
     if (!user) return { error: new Error('No user logged in') };
     
@@ -119,6 +143,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
+/**
+ * Hook to access authentication context.
+ */
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {

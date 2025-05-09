@@ -11,6 +11,9 @@ interface EmailTemplate {
   placeholderCount: number;
 }
 
+/**
+ * Renders the EmailsPage component displaying a list of email templates and an option to create a new template.
+ */
 const EmailsPage: React.FC = () => {
   const [templates] = useState<EmailTemplate[]>([
     {

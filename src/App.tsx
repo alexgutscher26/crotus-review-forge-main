@@ -24,6 +24,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
+/**
+ * Defines the main App component with routing and providers.
+ */
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>

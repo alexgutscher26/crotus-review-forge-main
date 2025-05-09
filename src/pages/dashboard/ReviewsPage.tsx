@@ -47,6 +47,16 @@ interface Review {
   optimized: boolean;
 }
 
+/**
+ * ReviewManagementComponent - A React component for managing and displaying reviews.
+ *
+ * @component
+ * @param {Object} props - The component's properties.
+ * @param {Array<Object>} props.reviews - An array of review objects to be displayed.
+ * @param {number} props.totalPages - The total number of pages for pagination.
+ * @param {Function} props.onPageChange - A function to handle page changes.
+ * @returns {JSX.Element} - The JSX element representing the ReviewManagementComponent.
+ */
 const ReviewsPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
@@ -177,6 +187,9 @@ const ReviewsPage: React.FC = () => {
   const totalPages = Math.ceil(allReviews.length / itemsPerPage);
   
   // Get current reviews
+  /**
+   * Retrieves reviews for the current page based on pagination.
+   */
   const getCurrentReviews = () => {
     const indexOfLastReview = currentPage * itemsPerPage;
     const indexOfFirstReview = indexOfLastReview - itemsPerPage;
@@ -189,6 +202,9 @@ const ReviewsPage: React.FC = () => {
   const reviewsCount = allReviews.length;
 
   // Open review details dialog
+  /**
+   * Sets the selected review and opens the details view.
+   */
   const openDetails = (review: Review) => {
     setSelectedReview(review);
     setDetailsOpen(true);

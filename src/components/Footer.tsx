@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Github, Twitter, Linkedin, Mail } from "lucide-react";
 
+/**
+ * Footer component for displaying footer links and social media icons.
+ */
 const Footer: React.FC = () => {
   return (
     <footer className="bg-white border-t">
