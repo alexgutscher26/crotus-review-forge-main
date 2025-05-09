@@ -72,6 +72,9 @@ const BreadcrumbPage = React.forwardRef<
 ))
 BreadcrumbPage.displayName = "BreadcrumbPage"
 
+/**
+ * A component that renders a breadcrumb separator using an SVG icon.
+ */
 const BreadcrumbSeparator = ({
   children,
   className,
@@ -88,6 +91,9 @@ const BreadcrumbSeparator = ({
 )
 BreadcrumbSeparator.displayName = "BreadcrumbSeparator"
 
+/**
+ * Breadcrumb ellipsis component with an icon and screen reader text.
+ */
 const BreadcrumbEllipsis = ({
   className,
   ...props
