@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,14 +16,25 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
@@ -32,7 +43,21 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Settings, Star, Check, X, ArrowRight } from "lucide-react";
+import { 
+  Settings, 
+  Star, 
+  Check, 
+  X, 
+  MoreVertical, 
+  Calendar, 
+  Search, 
+  Filter, 
+  Zap,
+  Trash,
+  Eye,
+  AlertTriangle,
+  CheckCircle2
+} from "lucide-react";
 
 interface Review {
   id: number;
@@ -51,8 +76,13 @@ const ReviewsPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [actionType, setActionType] = useState<"approve" | "reject" | "delete" | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "approved" | "pending" | "rejected">("all");
+  const [ratingFilter, setRatingFilter] = useState<number | "all">("all");
 
-  // Mock data for reviews - 10 reviews total for pagination example
+  // Mock data for reviews
   const allReviews: Review[] = [
     {
       id: 1,
@@ -172,21 +202,41 @@ const ReviewsPage: React.FC = () => {
     }
   ];
 
+  // Filter and search reviews
+  const filteredReviews = useMemo(() => {
+    return allReviews.filter(review => {
+      // Search filter
+      const matchesSearch = searchQuery === "" || 
+        review.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        review.comment.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        review.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (review.company && review.company.toLowerCase().includes(searchQuery.toLowerCase()));
+      
+      // Status filter
+      const matchesStatus = statusFilter === "all" || review.status === statusFilter;
+      
+      // Rating filter
+      const matchesRating = ratingFilter === "all" || review.rating === ratingFilter;
+      
+      return matchesSearch && matchesStatus && matchesRating;
+    });
+  }, [allReviews, searchQuery, statusFilter, ratingFilter]);
+
   // Pagination settings
   const itemsPerPage = 5;
-  const totalPages = Math.ceil(allReviews.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredReviews.length / itemsPerPage);
   
   // Get current reviews
-  const getCurrentReviews = () => {
+  const currentReviews = useMemo(() => {
     const indexOfLastReview = currentPage * itemsPerPage;
     const indexOfFirstReview = indexOfLastReview - itemsPerPage;
-    return allReviews.slice(indexOfFirstReview, indexOfLastReview);
-  };
-  
-  const currentReviews = getCurrentReviews();
+    return filteredReviews.slice(indexOfFirstReview, indexOfLastReview);
+  }, [filteredReviews, currentPage, itemsPerPage]);
 
-  // Reviews count for display
-  const reviewsCount = allReviews.length;
+  // Reset to first page when filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, statusFilter, ratingFilter]);
 
   // Open review details dialog
   const openDetails = (review: Review) => {
@@ -194,15 +244,69 @@ const ReviewsPage: React.FC = () => {
     setDetailsOpen(true);
   };
 
+  // Handle review actions
+  const handleAction = (review: Review, action: "approve" | "reject" | "delete") => {
+    setSelectedReview(review);
+    setActionType(action);
+    setConfirmDialogOpen(true);
+  };
+
+  // Confirm action
+  const confirmAction = () => {
+    if (!selectedReview || !actionType) return;
+    
+    // In a real app, you would make API calls here
+    console.log(`${actionType} review with id: ${selectedReview.id}`);
+    
+    // Close dialogs
+    setConfirmDialogOpen(false);
+    setDetailsOpen(false);
+    
+    // Reset states
+    setSelectedReview(null);
+    setActionType(null);
+  };
+
+  // Get status badge variant
+  const getStatusBadge = (status: "approved" | "pending" | "rejected") => {
+    switch (status) {
+      case "approved":
+        return { 
+          bg: "bg-green-100", 
+          text: "text-green-800", 
+          border: "border-green-200",
+          icon: <CheckCircle2 className="h-3 w-3 mr-1" />
+        };
+      case "pending":
+        return { 
+          bg: "bg-yellow-100", 
+          text: "text-yellow-800", 
+          border: "border-yellow-200",
+          icon: <AlertTriangle className="h-3 w-3 mr-1" />
+        };
+      case "rejected":
+        return { 
+          bg: "bg-red-100", 
+          text: "text-red-800", 
+          border: "border-red-200",
+          icon: <X className="h-3 w-3 mr-1" />
+        };
+    }
+  };
+
+  // Export to CSV
+  const exportToCSV = () => {
+    console.log("Exporting reviews to CSV");
+    // Implementation would go here
+  };
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Breadcrumbs */}
-      <Breadcrumb className="mb-6">
+      <Breadcrumb className="mb-4">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">
-              Dashboard
-            </BreadcrumbLink>
+            <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -211,138 +315,226 @@ const ReviewsPage: React.FC = () => {
         </BreadcrumbList>
       </Breadcrumb>
 
-      {/* Page Header */}
-      <div>
-        <div className="flex items-center gap-2">
-          <h1 className="text-4xl font-bold tracking-tight">Your reviews</h1>
-          <Badge variant="outline" className="text-sm">{reviewsCount}</Badge>
+      {/* Page Header with Actions */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-3xl font-bold tracking-tight">Your reviews</h1>
+            <Badge variant="outline" className="text-sm">{filteredReviews.length}</Badge>
+          </div>
+          <p className="text-muted-foreground mt-1">
+            Manage customer feedback and testimonials in one place
+          </p>
         </div>
-        <p className="text-muted-foreground mt-2 text-lg">
-          Manage all your reviews in one place and approve the ones you like.
-        </p>
+        <div className="flex flex-wrap gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={exportToCSV}
+            className="text-sm"
+          >
+            Export
+          </Button>
+          <Button size="sm" className="text-sm">
+            Add testimonial
+          </Button>
+        </div>
       </div>
-      
-      {/* Review Cards */}
-      <div className="space-y-6 mt-8">
-        {currentReviews.map((review) => (
-          <div key={review.id} className="border-b pb-6">
-            <div className="flex flex-col md:flex-row gap-4 md:gap-8">
-              {/* Avatar and User Info */}
-              <div className="flex flex-col items-center w-full md:w-auto">
-                <Avatar className="h-20 w-20 mb-2">
-                  {review.avatar ? (
-                    <AvatarImage src={review.avatar} alt={review.name} />
-                  ) : (
-                    <AvatarFallback className="text-xl">
-                      {review.name.charAt(0)}
-                    </AvatarFallback>
-                  )}
-                </Avatar>
-                <h3 className="font-medium text-center">{review.name}</h3>
-                <p className="text-sm text-muted-foreground text-center">
-                  {review.role} {review.company && review.company}
-                </p>
-              </div>
 
-              {/* Review Content */}
-              <div className="flex-1 space-y-3">
-                <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      fill={i < review.rating ? "#F59E0B" : "none"}
-                      className={`h-5 w-5 ${i < review.rating ? "text-crotus-orange" : "text-muted-foreground"}`}
-                    />
-                  ))}
-                </div>
-                
-                <p className="text-base">{review.comment}</p>
-                
-                <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                  <span className="flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                      <line x1="16" y1="2" x2="16" y2="6" />
-                      <line x1="8" y1="2" x2="8" y2="6" />
-                      <line x1="3" y1="10" x2="21" y2="10" />
-                    </svg>
-                    {review.date}
-                  </span>
-                  {review.optimized && (
-                    <span className="flex items-center gap-1">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-                      </svg>
-                      Optimized
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Review Actions */}
-              <div className="flex flex-col items-end gap-2">
-                <div className="relative">
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" size="sm">
-                        <Settings className="h-4 w-4 mr-1" /> Options
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-48" align="end">
-                      <div className="grid gap-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="justify-start"
-                          onClick={() => openDetails(review)}
-                        >
-                          Details
-                        </Button>
-                        {review.status !== "rejected" && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="justify-start text-destructive hover:text-destructive"
-                          >
-                            <X className="h-4 w-4 mr-2" /> Reject
-                          </Button>
-                        )}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="justify-start text-destructive hover:text-destructive"
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-                </div>
-
-                <div className="mt-1">
-                  <Badge 
-                    variant={review.status === "approved" ? "default" : "outline"} 
-                    className={`${
-                      review.status === "approved" 
-                        ? "bg-green-100 hover:bg-green-100 text-green-800 border-green-200" 
-                        : review.status === "pending" 
-                          ? "bg-yellow-100 hover:bg-yellow-100 text-yellow-800 border-yellow-200" 
-                          : "bg-red-100 hover:bg-red-100 text-red-800 border-red-200"
-                    }`}
-                  >
-                    {review.status === "approved" && <Check className="h-3 w-3 mr-1" />}
-                    {review.status.charAt(0).toUpperCase() + review.status.slice(1)} {review.status === "approved" && "🎉"}
-                  </Badge>
-                </div>
-              </div>
+      {/* Filters */}
+      <Card className="shadow-sm">
+        <CardContent className="p-4">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-grow">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground pointer-events-none" />
+              <Input
+                type="text"
+                placeholder="Search reviews..."
+                className="pl-8"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <div className="flex gap-2">
+              <Select 
+                value={statusFilter}
+                onValueChange={(value) => setStatusFilter(value as any)}
+              >
+                <SelectTrigger className="w-32">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="approved">Approved</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="rejected">Rejected</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select 
+                value={ratingFilter.toString()}
+                onValueChange={(value) => setRatingFilter(value === "all" ? "all" : parseInt(value))}
+              >
+                <SelectTrigger className="w-32">
+                  <SelectValue placeholder="Rating" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Ratings</SelectItem>
+                  <SelectItem value="5">5 Stars</SelectItem>
+                  <SelectItem value="4">4 Stars</SelectItem>
+                  <SelectItem value="3">3 Stars</SelectItem>
+                  <SelectItem value="2">2 Stars</SelectItem>
+                  <SelectItem value="1">1 Star</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
-        ))}
+        </CardContent>
+      </Card>
+      
+      {/* Review Cards */}
+      <div className="space-y-4">
+        {currentReviews.length > 0 ? (
+          currentReviews.map((review) => (
+            <Card key={review.id} className="overflow-hidden hover:shadow-md transition-shadow">
+              <CardContent className="p-0">
+                <div className="p-5">
+                  <div className="flex flex-col md:flex-row gap-5">
+                    {/* Avatar and User Info */}
+                    <div className="flex flex-col items-center md:w-48">
+                      <Avatar className="h-16 w-16 mb-2">
+                        {review.avatar ? (
+                          <AvatarImage src={review.avatar} alt={review.name} />
+                        ) : (
+                          <AvatarFallback className="text-lg bg-primary/10">
+                            {review.name.charAt(0)}
+                          </AvatarFallback>
+                        )}
+                      </Avatar>
+                      <h3 className="font-medium text-center">{review.name}</h3>
+                      <p className="text-xs text-muted-foreground text-center mt-1">
+                        {review.role} {review.company && review.company}
+                      </p>
+                    </div>
+
+                    {/* Review Content */}
+                    <div className="flex-1 space-y-3">
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            fill={i < review.rating ? "#F59E0B" : "none"}
+                            className={`h-4 w-4 ${i < review.rating ? "text-amber-500" : "text-muted-foreground"}`}
+                          />
+                        ))}
+                        <span className="ml-2 text-xs text-muted-foreground">
+                          {review.date}
+                        </span>
+                      </div>
+                      
+                      <p className="text-sm">{review.comment}</p>
+                      
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground pt-2">
+                        <span className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          {review.date}
+                        </span>
+                        {review.optimized && (
+                          <Badge variant="secondary" className="text-xs flex items-center gap-1 bg-blue-50 text-blue-700 hover:bg-blue-50">
+                            <Zap className="h-3 w-3" />
+                            Optimized
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Review Status and Actions */}
+                    <div className="flex md:flex-col justify-between items-end md:w-32">
+                      <Badge 
+                        variant="outline" 
+                        className={`${getStatusBadge(review.status).bg} ${getStatusBadge(review.status).text} ${getStatusBadge(review.status).border} flex items-center`}
+                      >
+                        {getStatusBadge(review.status).icon}
+                        {review.status.charAt(0).toUpperCase() + review.status.slice(1)}
+                      </Badge>
+                      
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48">
+                          <DropdownMenuItem onClick={() => openDetails(review)}>
+                            <Eye className="h-4 w-4 mr-2" />
+                            View details
+                          </DropdownMenuItem>
+                          {review.status !== "approved" && (
+                            <DropdownMenuItem onClick={() => handleAction(review, "approve")}>
+                              <Check className="h-4 w-4 mr-2 text-green-600" />
+                              Approve
+                            </DropdownMenuItem>
+                          )}
+                          {review.status !== "rejected" && (
+                            <DropdownMenuItem onClick={() => handleAction(review, "reject")}>
+                              <X className="h-4 w-4 mr-2 text-red-600" />
+                              Reject
+                            </DropdownMenuItem>
+                          )}
+                          <DropdownMenuItem 
+                            onClick={() => handleAction(review, "delete")}
+                            className="text-red-600"
+                          >
+                            <Trash className="h-4 w-4 mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center p-8 bg-muted/50 rounded-lg">
+            <Search className="h-10 w-10 text-muted-foreground mb-4" />
+            <h3 className="text-lg font-medium">No reviews found</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              Try adjusting your search or filter criteria
+            </p>
+          </div>
+        )}
       </div>
+
+      {/* Empty state when no reviews match filters */}
+      {filteredReviews.length === 0 && (
+        <div className="flex flex-col items-center justify-center p-12 bg-muted/20 border border-dashed rounded-lg">
+          <div className="mb-4 p-3 bg-primary/10 rounded-full">
+            <Search className="h-6 w-6 text-primary" />
+          </div>
+          <h3 className="text-lg font-medium mb-1">No reviews found</h3>
+          <p className="text-sm text-muted-foreground text-center max-w-md">
+            We couldn't find any reviews matching your current filters. 
+            Try adjusting your search criteria or clear filters.
+          </p>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="mt-4"
+            onClick={() => {
+              setSearchQuery("");
+              setStatusFilter("all");
+              setRatingFilter("all");
+            }}
+          >
+            Clear all filters
+          </Button>
+        </div>
+      )}
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <Pagination className="mt-8">
+        <Pagination className="mt-6">
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious 
@@ -358,20 +550,39 @@ const ReviewsPage: React.FC = () => {
               />
             </PaginationItem>
             
-            {[...Array(totalPages)].map((_, index) => (
-              <PaginationItem key={index}>
-                <PaginationLink 
-                  href="#"
-                  isActive={currentPage === index + 1}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setCurrentPage(index + 1);
-                  }}
-                >
-                  {index + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
+            {[...Array(totalPages)].map((_, index) => {
+              // Show first page, last page, and pages around current page
+              if (
+                index === 0 || 
+                index === totalPages - 1 || 
+                (index >= currentPage - 2 && index <= currentPage)
+              ) {
+                return (
+                  <PaginationItem key={index}>
+                    <PaginationLink 
+                      href="#"
+                      isActive={currentPage === index + 1}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage(index + 1);
+                      }}
+                    >
+                      {index + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              } else if (
+                index === 1 && currentPage > 3 || 
+                index === totalPages - 2 && currentPage < totalPages - 2
+              ) {
+                return (
+                  <PaginationItem key={index}>
+                    <span className="px-2">...</span>
+                  </PaginationItem>
+                );
+              }
+              return null;
+            })}
             
             <PaginationItem>
               <PaginationNext 
@@ -404,11 +615,11 @@ const ReviewsPage: React.FC = () => {
               
               <div className="space-y-4 mt-4">
                 <div className="flex items-center gap-3">
-                  <Avatar>
+                  <Avatar className="h-12 w-12">
                     {selectedReview.avatar ? (
                       <AvatarImage src={selectedReview.avatar} alt={selectedReview.name} />
                     ) : (
-                      <AvatarFallback>{selectedReview.name.charAt(0)}</AvatarFallback>
+                      <AvatarFallback className="bg-primary/10">{selectedReview.name.charAt(0)}</AvatarFallback>
                     )}
                   </Avatar>
                   <div>
@@ -417,6 +628,13 @@ const ReviewsPage: React.FC = () => {
                       {selectedReview.role} {selectedReview.company && selectedReview.company}
                     </p>
                   </div>
+                  <Badge 
+                    variant="outline"
+                    className={`ml-auto ${getStatusBadge(selectedReview.status).bg} ${getStatusBadge(selectedReview.status).text} ${getStatusBadge(selectedReview.status).border} flex items-center`}
+                  >
+                    {getStatusBadge(selectedReview.status).icon}
+                    {selectedReview.status.charAt(0).toUpperCase() + selectedReview.status.slice(1)}
+                  </Badge>
                 </div>
                 
                 <div className="flex items-center">
@@ -424,7 +642,7 @@ const ReviewsPage: React.FC = () => {
                     <Star
                       key={i}
                       fill={i < selectedReview.rating ? "#F59E0B" : "none"}
-                      className={`h-4 w-4 ${i < selectedReview.rating ? "text-crotus-orange" : "text-muted-foreground"}`}
+                      className={`h-4 w-4 ${i < selectedReview.rating ? "text-amber-500" : "text-muted-foreground"}`}
                     />
                   ))}
                   <span className="ml-2 text-sm text-muted-foreground">
@@ -432,26 +650,89 @@ const ReviewsPage: React.FC = () => {
                   </span>
                 </div>
                 
-                <p className="text-base">{selectedReview.comment}</p>
-                
-                <div className="flex gap-3 pt-4 border-t">
-                  {selectedReview.status !== "approved" && (
-                    <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                      <Check className="h-4 w-4 mr-1" /> Approve
-                    </Button>
-                  )}
-                  {selectedReview.status !== "rejected" && (
-                    <Button size="sm" variant="outline" className="border-red-500 text-red-600 hover:bg-red-50">
-                      <X className="h-4 w-4 mr-1" /> Reject
-                    </Button>
-                  )}
-                  <Button size="sm" variant="outline">
-                    Delete
-                  </Button>
+                <div className="bg-muted/20 p-4 rounded-md">
+                  <p className="text-base italic">"{selectedReview.comment}"</p>
                 </div>
+                
+                {selectedReview.optimized && (
+                  <div className="flex items-center gap-2 text-sm text-blue-700 bg-blue-50 p-2 rounded">
+                    <Zap className="h-4 w-4" />
+                    <span>This review has been optimized for marketing materials</span>
+                  </div>
+                )}
+                
+                <DialogFooter className="flex gap-3 sm:justify-between">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-red-300 text-red-600 hover:bg-red-50"
+                    onClick={() => handleAction(selectedReview, "delete")}
+                  >
+                    <Trash className="h-4 w-4 mr-1" /> Delete
+                  </Button>
+                  
+                  <div className="flex gap-2">
+                    {selectedReview.status !== "rejected" && (
+                      <Button 
+                        variant="outline"
+                        size="sm"
+                        className="border-red-300 text-red-600 hover:bg-red-50"
+                        onClick={() => handleAction(selectedReview, "reject")}
+                      >
+                        <X className="h-4 w-4 mr-1" /> Reject
+                      </Button>
+                    )}
+                    {selectedReview.status !== "approved" && (
+                      <Button 
+                        size="sm"
+                        className="bg-green-600 hover:bg-green-700"
+                        onClick={() => handleAction(selectedReview, "approve")}
+                      >
+                        <Check className="h-4 w-4 mr-1" /> Approve
+                      </Button>
+                    )}
+                  </div>
+                </DialogFooter>
               </div>
             </>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>
+              {actionType === "approve" && "Approve Review"}
+              {actionType === "reject" && "Reject Review"}
+              {actionType === "delete" && "Delete Review"}
+            </DialogTitle>
+            <DialogDescription>
+              {actionType === "approve" && "Are you sure you want to approve this review? It will be published on your website."}
+              {actionType === "reject" && "Are you sure you want to reject this review? It will be hidden from your website."}
+              {actionType === "delete" && "Are you sure you want to delete this review? This action cannot be undone."}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex sm:justify-end gap-2">
+            <DialogClose asChild>
+              <Button variant="outline" size="sm">Cancel</Button>
+            </DialogClose>
+            <Button 
+              size="sm"
+              className={
+                actionType === "approve" ? "bg-green-600 hover:bg-green-700" :
+                actionType === "reject" ? "bg-amber-600 hover:bg-amber-700" :
+                "bg-red-600 hover:bg-red-700"
+              }
+              onClick={confirmAction}
+            >
+              {actionType === "approve" && <Check className="h-4 w-4 mr-1" />}
+              {actionType === "reject" && <X className="h-4 w-4 mr-1" />}
+              {actionType === "delete" && <Trash className="h-4 w-4 mr-1" />}
+              {actionType?.charAt(0).toUpperCase() + actionType?.slice(1)}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
