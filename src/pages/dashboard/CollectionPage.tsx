@@ -27,6 +27,13 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 
+/**
+ * This component renders a dashboard for managing review forms, including tabs for video settings,
+ * integration options, and customization. It provides functionality to copy embed codes and download QR codes.
+ *
+ * @component ReviewDashboard
+ * @returns {JSX.Element} The JSX element representing the review dashboard.
+ */
 const CollectionPage = () => {
   const { toast } = useToast();
   const { profile } = useAuth();
@@ -51,6 +58,9 @@ const CollectionPage = () => {
     }
   }, [copied]);
 
+  /**
+   * Copies the form link to the clipboard and shows a success toast.
+   */
   const copyToClipboard = () => {
     navigator.clipboard.writeText(formLink).then(() => {
       setCopied(true);
@@ -61,6 +71,9 @@ const CollectionPage = () => {
     });
   };
 
+  /**
+   * Shares a form link using the Web Share API or copies it to the clipboard if not supported.
+   */
   const shareLink = () => {
     if (navigator.share) {
       navigator.share({
@@ -85,6 +98,9 @@ const CollectionPage = () => {
     }
   };
 
+  /**
+   * Opens a new browser tab with the form link.
+   */
   const handlePreview = () => {
     window.open(formLink, '_blank', 'noopener,noreferrer');
   };
