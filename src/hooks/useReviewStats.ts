@@ -8,6 +8,9 @@ interface ReviewStats {
   conversionRate: number;
 }
 
+/**
+ * Custom hook to fetch and calculate review statistics from a Supabase database.
+ */
 export const useReviewStats = () => {
   const [stats, setStats] = useState<ReviewStats>({
     totalReviews: 0,
@@ -18,6 +21,9 @@ export const useReviewStats = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  /**
+   * Asynchronously calculates and updates statistics related to reviews.
+   */
   const calculateStats = async () => {
     try {
       setLoading(true);
