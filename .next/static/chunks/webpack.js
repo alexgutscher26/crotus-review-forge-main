@@ -13,8 +13,10 @@
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
 /******/ 	
+/**
+ * Loads a module from cache or executes it if not present.
+ */
 /******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
@@ -153,8 +155,10 @@
 /******/ 		
 /******/ 				script.src = __webpack_require__.tu(url);
 /******/ 			}
+/**
+ * Handles script completion and cleanup.
+ */
 /******/ 			inProgress[url] = [done];
-/******/ 			var onScriptComplete = (prev, event) => {
 /******/ 				// avoid mem leaks in IE.
 /******/ 				script.onerror = script.onload = null;
 /******/ 				clearTimeout(timeout);
@@ -254,8 +258,16 @@
 /******/ 		
 /******/ 		__webpack_require__.hmrC = {};
 /******/ 		__webpack_require__.hmrI = {};
+/**
+ * Creates a modified require function with additional HMR (Hot Module Replacement) handling.
+ *
+ * This function checks if the module is installed and active, then wraps the original require function to track dependencies
+ * and handle changes dynamically. It also ensures that properties of the original require are preserved in the new function.
+ *
+ * @param {Function} require - The original require function to be modified.
+ * @param {string} moduleId - The identifier for the module being wrapped.
+ */
 /******/ 		
-/******/ 		function createRequire(require, moduleId) {
 /******/ 			var me = installedModules[moduleId];
 /******/ 			if (!me) return require;
 /******/ 			var fn = function (request) {
@@ -305,8 +317,13 @@
 /******/ 			};
 /******/ 			return fn;
 /******/ 		}
+/**
+ * Creates a Hot Module Replacement (HMR) object for a given module.
+ * @param {string} moduleId - The ID of the module to create the HMR object for.
+ * @param {Object} me - The current module information.
+ * @returns {Object} - The HMR object with various methods and properties.
+ */
 /******/ 		
-/******/ 		function createModuleHotObject(moduleId, me) {
 /******/ 			var _main = currentChildModule !== moduleId;
 /******/ 			var hot = {
 /******/ 				// private stuff
@@ -412,8 +429,10 @@
 /******/ 			currentChildModule = undefined;
 /******/ 			return hot;
 /******/ 		}
+/**
+ * Sets the current status and notifies all registered handlers.
+ */
 /******/ 		
-/******/ 		function setStatus(newStatus) {
 /******/ 			currentStatus = newStatus;
 /******/ 			var results = [];
 /******/ 		
@@ -422,8 +441,10 @@
 /******/ 		
 /******/ 			return Promise.all(results).then(function () {});
 /******/ 		}
+/**
+ * Decrements blockingPromises and resolves waiting promises if all are unblocked.
+ */
 /******/ 		
-/******/ 		function unblock() {
 /******/ 			if (--blockingPromises === 0) {
 /******/ 				setStatus("ready").then(function () {
 /******/ 					if (blockingPromises === 0) {
@@ -436,8 +457,10 @@
 /******/ 				});
 /******/ 			}
 /******/ 		}
+/**
+ * Tracks a blocking promise based on the current status and increments the blocking promises count.
+ */
 /******/ 		
-/******/ 		function trackBlockingPromise(promise) {
 /******/ 			switch (currentStatus) {
 /******/ 				case "ready":
 /******/ 					setStatus("prepare");
@@ -450,8 +473,10 @@
 /******/ 					return promise;
 /******/ 			}
 /******/ 		}
+/**
+ * Executes a function after all blocking promises are resolved.
+ */
 /******/ 		
-/******/ 		function waitForBlockingPromises(fn) {
 /******/ 			if (blockingPromises === 0) return fn();
 /******/ 			return new Promise(function (resolve) {
 /******/ 				blockingPromisesWaiting.push(function () {
@@ -459,8 +484,10 @@
 /******/ 				});
 /******/ 			});
 /******/ 		}
+/**
+ * Performs a hot update check and applies updates if available.
+ */
 /******/ 		
-/******/ 		function hotCheck(applyOnUpdate) {
 /******/ 			if (currentStatus !== "idle") {
 /******/ 				throw new Error("check() is only allowed in idle status");
 /******/ 			}
@@ -507,8 +534,10 @@
 /******/ 					});
 /******/ 				});
 /******/ 		}
+/**
+ * Applies updates with the given options if the current status is "ready".
+ */
 /******/ 		
-/******/ 		function hotApply(options) {
 /******/ 			if (currentStatus !== "ready") {
 /******/ 				return Promise.resolve().then(function () {
 /******/ 					throw new Error(
@@ -520,8 +549,10 @@
 /******/ 			}
 /******/ 			return internalApply(options);
 /******/ 		}
+/**
+ * Applies updates to modules and handles errors.
+ */
 /******/ 		
-/******/ 		function internalApply(options) {
 /******/ 			options = options || {};
 /******/ 		
 /******/ 			applyInvalidatedModules();
@@ -592,8 +623,10 @@
 /******/ 				});
 /******/ 			});
 /******/ 		}
+/**
+ * Applies queued invalidated modules using HMR invalidation handlers.
+ */
 /******/ 		
-/******/ 		function applyInvalidatedModules() {
 /******/ 			if (queuedInvalidatedModules) {
 /******/ 				if (!currentUpdateApplyHandlers) currentUpdateApplyHandlers = [];
 /******/ 				Object.keys(__webpack_require__.hmrI).forEach(function (key) {
@@ -664,16 +697,34 @@
 /******/ 		// no preloaded
 /******/ 		
 /******/ 		var currentUpdatedModulesList;
+/**
+ * Initiates the process of loading an update chunk and handles its resolution or rejection.
+ *
+ * This function sets up a promise that resolves when the specified chunk is successfully loaded,
+ * or rejects with an error if the loading fails. It also creates an error object to capture
+ * detailed information about any issues encountered during the loading process.
+ *
+ * @param {number} chunkId - The identifier for the chunk to be updated.
+ * @param {Array} updatedModulesList - A list of modules that are part of this update.
+ */
 /******/ 		var waitingUpdateResolves = {};
-/******/ 		function loadUpdateChunk(chunkId, updatedModulesList) {
 /******/ 			currentUpdatedModulesList = updatedModulesList;
 /******/ 			return new Promise((resolve, reject) => {
 /******/ 				waitingUpdateResolves[chunkId] = resolve;
 /******/ 				// start update chunk loading
 /******/ 				var url = __webpack_require__.p + __webpack_require__.hu(chunkId);
 /******/ 				// create error before stack unwound to get useful stacktrace later
+/**
+ * Handles the completion of a chunk loading event, updating error details and rejecting a promise.
+ *
+ * This function checks if there is a pending resolution for a specific chunk ID in `waitingUpdateResolves`.
+ * If found, it clears the pending resolution, determines the error type based on the event,
+ * constructs an error message with the chunk ID, error type, and source URL, then rejects
+ * the promise associated with the chunk load.
+ *
+ * @param {Event} event - The event object containing details about the chunk loading completion.
+ */
 /******/ 				var error = new Error();
-/******/ 				var loadingEnded = (event) => {
 /******/ 					if(waitingUpdateResolves[chunkId]) {
 /******/ 						waitingUpdateResolves[chunkId] = undefined
 /******/ 						var errorType = event && (event.type === 'load' ? 'missing' : event.type);
@@ -706,11 +757,20 @@
 /******/ 		var currentUpdateChunks;
 /******/ 		var currentUpdate;
 /******/ 		var currentUpdateRemovedChunks;
+/**
+ * Applies updates to modules and handles various error scenarios during hot module replacement (HMR).
+ *
+ * @param {Object} update - The update object containing information about the modules to be updated.
+ * @param {Function[]} currentUpdateRuntime - An array of runtime functions to be executed after updating the modules.
+ * @param {Object} options - Options for handling different scenarios during HMR.
+ * @returns {{dispose: Function, apply: Function}} - An object with `dispose` and `apply` methods.
+ */
 /******/ 		var currentUpdateRuntime;
-/******/ 		function applyHandler(options) {
 /******/ 			if (__webpack_require__.f) delete __webpack_require__.f.jsonpHmr;
+/**
+ * Determines the effects of updating a module by identifying affected modules and dependencies.
+ */
 /******/ 			currentUpdateChunks = undefined;
-/******/ 			function getAffectedModuleEffects(updateModuleId) {
 /******/ 				var outdatedModules = [updateModuleId];
 /******/ 				var outdatedDependencies = {};
 /******/ 		
@@ -779,8 +839,10 @@
 /******/ 					outdatedDependencies: outdatedDependencies
 /******/ 				};
 /******/ 			}
+/**
+ * Adds all unique elements from array `b` to array `a`.
+ */
 /******/ 		
-/******/ 			function addAllToSet(a, b) {
 /******/ 				for (var i = 0; i < b.length; i++) {
 /******/ 					var item = b[i];
 /******/ 					if (a.indexOf(item) === -1) a.push(item);
@@ -1155,8 +1217,10 @@
 /******/ 		
 /******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
 /******/ 		
+/**
+ * Processes Webpack JSONP data, updates modules, and handles chunk loading.
+ */
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			var [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback

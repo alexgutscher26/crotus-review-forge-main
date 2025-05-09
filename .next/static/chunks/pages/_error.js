@@ -19,8 +19,10 @@ eval(__webpack_require__.ts("\n    (window.__NEXT_P = window.__NEXT_P || []).pus
 /***/ })
 
 },
+/**
+ * Executes a Webpack module by its ID and sets it as the entry point.
+ */
 /******/ __webpack_require__ => { // webpackRuntimeModules
-/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
 /******/ __webpack_require__.O(0, ["pages/_app","main"], () => (__webpack_exec__("(pages-dir-browser)/./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?absolutePagePath=private-next-pages%2F_error&page=%2F_error!")));
 /******/ var __webpack_exports__ = __webpack_require__.O();
 /******/ _N_E = __webpack_exports__;

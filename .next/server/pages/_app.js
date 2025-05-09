@@ -39,6 +39,9 @@ module.exports = require("react/jsx-runtime");
 // load runtime
 var __webpack_require__ = require("../webpack-runtime.js");
 __webpack_require__.C(exports);
+/**
+ * Executes a webpack module by setting it as the entry point and returning its exports.
+ */
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
 var __webpack_exports__ = __webpack_require__.X(0, ["vendor-chunks/next"], () => (__webpack_exec__("(pages-dir-node)/./node_modules/next/dist/pages/_app.js")));
 module.exports = __webpack_exports__;
