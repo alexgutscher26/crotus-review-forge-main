@@ -16,7 +16,17 @@ interface ReviewFormData {
   jobTitle: string;
 }
 
-const ReviewForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+interface VideoUploadState {
+  file: File | null;
+  previewUrl: string | null;
+}
+
+interface ImageUploadState {
+  file: File | null;
+  previewUrl: string | null;
+}
+
+export const ReviewForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [formData, setFormData] = useState<ReviewFormData>({
     rating: 0,
     comment: '',
@@ -120,6 +130,26 @@ const Welcome = () => {
   );
   const [showGreetingImage, setShowGreetingImage] = useState(true);
   const [showGreetingVideo, setShowGreetingVideo] = useState(false);
+  const [videoUpload, setVideoUpload] = useState<VideoUploadState>({
+    file: null,
+    previewUrl: null
+  });
+  const [imageUpload, setImageUpload] = useState<ImageUploadState>({
+    file: null,
+    previewUrl: null
+  });
+
+  // Cleanup function for object URLs
+  React.useEffect(() => {
+    return () => {
+      if (imageUpload.previewUrl) {
+        URL.revokeObjectURL(imageUpload.previewUrl);
+      }
+      if (videoUpload.previewUrl) {
+        URL.revokeObjectURL(videoUpload.previewUrl);
+      }
+    };
+  }, [imageUpload.previewUrl, videoUpload.previewUrl]);
 
   const handleGreetingImageChange = (checked: boolean) => {
     setShowGreetingImage(checked);
@@ -134,13 +164,20 @@ const Welcome = () => {
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
 
   const handleSave = () => {
-    // TODO: Implement save functionality
+    // Generate a unique review ID for testing
+    const reviewId = Math.random().toString(36).substring(2, 15);
+    const localReviewUrl = `/review/${reviewId}`;
+    
     console.log('Saving welcome page settings:', {
       title,
       greetingText,
       showGreetingImage,
       showGreetingVideo,
+      localReviewUrl
     });
+
+    // For testing, you can open the local review URL
+    window.open(localReviewUrl, '_blank');
   };
 
   return (
@@ -193,22 +230,56 @@ const Welcome = () => {
               {showGreetingImage && (
                 <Card 
                   className="p-6 border-dashed cursor-pointer hover:bg-gray-50 transition-colors"
-                  onDragOver={(e) => e.preventDefault()}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.currentTarget.classList.add('bg-gray-50');
+                  }}
+                  onDragLeave={(e) => {
+                    e.preventDefault();
+                    e.currentTarget.classList.remove('bg-gray-50');
+                  }}
                   onDrop={(e) => {
                     e.preventDefault();
-                    // Handle image drop here
-                    console.log('Image dropped');
+                    e.currentTarget.classList.remove('bg-gray-50');
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                      const url = URL.createObjectURL(file);
+                      setImageUpload({ file, previewUrl: url });
+                    }
+                  }}
+                  onClick={() => {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = 'image/*';
+                    input.onchange = (e) => {
+                      const file = (e.target as HTMLInputElement).files?.[0];
+                      if (file) {
+                        const url = URL.createObjectURL(file);
+                        setImageUpload({ file, previewUrl: url });
+                      }
+                    };
+                    input.click();
                   }}
                 >
-                  <div className="text-center space-y-2">
-                    <div className="w-12 h-12 mx-auto bg-gray-100 rounded-full flex items-center justify-center">
-                      <ArrowLeft className="w-6 h-6 text-gray-400 rotate-90" />
+                  {imageUpload.previewUrl ? (
+                    <div className="aspect-video rounded-lg overflow-hidden">
+                      <img
+                        src={imageUpload.previewUrl}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-                    <p className="text-sm font-medium text-gray-700">Upload your image</p>
-                    <p className="text-sm text-gray-500">Click to upload or drag & drop</p>
-                    <p className="text-xs text-gray-400">Supported: JPG, PNG, WEBP</p>
-                    <p className="text-xs text-gray-400">Ideal format: 1920×1080</p>
-                  </div>
+                  ) : (
+                    <div className="text-center space-y-2">
+                      <div className="w-12 h-12 mx-auto bg-gray-100 rounded-full flex items-center justify-center">
+                        <ArrowLeft className="w-6 h-6 text-gray-400 rotate-90" />
+                      </div>
+                      <p className="text-sm font-medium text-gray-700">Upload your image</p>
+                      <p className="text-sm text-gray-500">Click to upload or drag & drop</p>
+                      <p className="text-xs text-gray-400">Supported: JPG, PNG, WEBP</p>
+                      <p className="text-xs text-gray-400">Ideal format: 1920×1080</p>
+                    </div>
+                  )}
                 </Card>
               )}
             </div>
@@ -225,6 +296,61 @@ const Welcome = () => {
                   onCheckedChange={handleGreetingVideoChange}
                 />
               </div>
+              {showGreetingVideo && (
+                <Card
+                  className="p-6 border-dashed cursor-pointer hover:bg-gray-50 transition-colors"
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.currentTarget.classList.add('bg-gray-50');
+                  }}
+                  onDragLeave={(e) => {
+                    e.preventDefault();
+                    e.currentTarget.classList.remove('bg-gray-50');
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    e.currentTarget.classList.remove('bg-gray-50');
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type.startsWith('video/')) {
+                      const url = URL.createObjectURL(file);
+                      setVideoUpload({ file, previewUrl: url });
+                    }
+                  }}
+                  onClick={() => {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = 'video/*';
+                    input.onchange = (e) => {
+                      const file = (e.target as HTMLInputElement).files?.[0];
+                      if (file) {
+                        const url = URL.createObjectURL(file);
+                        setVideoUpload({ file, previewUrl: url });
+                      }
+                    };
+                    input.click();
+                  }}
+                >
+                  {videoUpload.previewUrl ? (
+                    <div className="aspect-video rounded-lg overflow-hidden">
+                      <video
+                        src={videoUpload.previewUrl}
+                        controls
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="text-center space-y-2">
+                      <div className="w-12 h-12 mx-auto bg-gray-100 rounded-full flex items-center justify-center">
+                        <ArrowLeft className="w-6 h-6 text-gray-400 rotate-90" />
+                      </div>
+                      <p className="text-sm font-medium text-gray-700">Upload your video</p>
+                      <p className="text-sm text-gray-500">Click to upload or drag & drop</p>
+                      <p className="text-xs text-gray-400">Supported: MP4, WebM, Ogg</p>
+                      <p className="text-xs text-gray-400">Max size: 100MB</p>
+                    </div>
+                  )}
+                </Card>
+              )}
             </div>
 
             <Button 
@@ -245,12 +371,30 @@ const Welcome = () => {
             <div className="p-8 space-y-6">
               <h3 className="text-2xl font-bold">{title}</h3>
               <p className="text-gray-600 whitespace-pre-wrap">{greetingText}</p>
-              {showGreetingImage && (
+              {showGreetingImage && imageUpload.previewUrl && (
+                <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+                  <img
+                    src={imageUpload.previewUrl}
+                    alt="Greeting"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              {showGreetingImage && !imageUpload.previewUrl && (
                 <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
                   <p className="text-gray-400">Preview image will appear here</p>
                 </div>
               )}
-              {showGreetingVideo && (
+              {showGreetingVideo && videoUpload.previewUrl && (
+                <div className="mt-4 rounded-lg aspect-video overflow-hidden">
+                  <video
+                    src={videoUpload.previewUrl}
+                    controls
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              {showGreetingVideo && !videoUpload.previewUrl && (
                 <div className="mt-4 bg-gray-100 rounded-lg aspect-video flex items-center justify-center border-2 border-dashed border-gray-200">
                   <div className="text-center space-y-2">
                     <div className="w-12 h-12 mx-auto bg-gray-200 rounded-full flex items-center justify-center">

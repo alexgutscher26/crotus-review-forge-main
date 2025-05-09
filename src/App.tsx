@@ -21,6 +21,9 @@ import OnboardingPage from "./pages/Onboarding";
 import LoginPage from "./pages/Login";
 import SignupPage from "./pages/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ReviewLandingPage from "./pages/review/ReviewLandingPage";
+import TextReviewPage from "./pages/review/TextReviewPage";
+import VideoReviewPage from "./pages/review/VideoReviewPage";
 
 const queryClient = new QueryClient();
 
@@ -51,7 +54,11 @@ const App = () => (
               </Route>
               <Route path="/onboarding" element={<OnboardingPage />} />
             </Route>
-            
+
+            {/* Public Review Routes */}
+            <Route path="/review/:id" element={<ReviewLandingPage />} />
+            <Route path="/review/:id/text" element={<TextReviewPage />} />
+            <Route path="/review/:id/video" element={<VideoReviewPage />} />
           
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />
