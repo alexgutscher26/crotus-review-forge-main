@@ -54,8 +54,10 @@ eval(__webpack_require__.ts("\n\nif (false) {} else {\n  module.exports = __webp
 /***/ })
 
 },
+/**
+ * Executes a Webpack module by setting it as the entry point and returning the result.
+ */
 /******/ __webpack_require__ => { // webpackRuntimeModules
-/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
 /******/ var __webpack_exports__ = (__webpack_exec__("(pages-dir-browser)/./node_modules/next/dist/compiled/@next/react-refresh-utils/dist/runtime.js"));
 /******/ _N_E = __webpack_exports__;
 /******/ }
