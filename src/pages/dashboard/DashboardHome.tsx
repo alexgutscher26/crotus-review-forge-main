@@ -1,6 +1,9 @@
 
 import React from "react";
 
+/**
+ * A React functional component representing the home page of the dashboard.
+ */
 const DashboardHome: React.FC = () => {
   return (
     <div>
