@@ -9,6 +9,9 @@ interface ShinyButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
 }
 
+/**
+ * A styled button component that wraps an anchor tag for navigation.
+ */
 export const ShinyButton = ({
   className,
   children,
