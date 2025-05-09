@@ -3,6 +3,9 @@ import { useParams } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { ReviewForm } from '@/pages/dashboard/form/Welcome';
 
+/**
+ * Component representing a review page where users can write feedback.
+ */
 const ReviewPage = () => {
   const { id } = useParams();
 

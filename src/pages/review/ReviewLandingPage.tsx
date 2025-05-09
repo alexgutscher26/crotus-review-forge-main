@@ -4,14 +4,23 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MessageSquare, Video } from 'lucide-react';
 
+/**
+ * A functional component representing a landing page for reviewing content via text or video.
+ */
 const ReviewLandingPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  /**
+   * Navigates to the text review page for a specific item.
+   */
   const handleTextReview = () => {
     navigate(`/review/${id}/text`);
   };
 
+  /**
+   * Navigates to the video review page for a specific ID.
+   */
   const handleVideoReview = () => {
     navigate(`/review/${id}/video`);
   };

@@ -12,6 +12,9 @@ interface VideoReviewData {
   videoBlob: Blob | null;
 }
 
+/**
+ * Video review page component allowing users to record and submit video reviews.
+ */
 const VideoReviewPage = () => {
   const { id } = useParams();
   const [isRecording, setIsRecording] = useState(false);
@@ -27,6 +30,9 @@ const VideoReviewPage = () => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
 
+  /**
+   * Starts recording video from the user's camera.
+   */
   const startRecording = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -60,6 +66,9 @@ const VideoReviewPage = () => {
     }
   };
 
+  /**
+   * Stops the recording process and updates the recording state.
+   */
   const stopRecording = () => {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
@@ -67,6 +76,9 @@ const VideoReviewPage = () => {
     }
   };
 
+  /**
+   * Stops all tracks of the current stream and clears it.
+   */
   const stopStream = () => {
     if (stream) {
       stream.getTracks().forEach(track => track.stop());
@@ -74,11 +86,17 @@ const VideoReviewPage = () => {
     }
   };
 
+  /**
+   * Resets the video recording by clearing the video blob and form data.
+   */
   const resetRecording = () => {
     setVideoBlob(null);
     setFormData(prev => ({ ...prev, videoBlob: null }));
   };
 
+  /**
+   * Handles form submission for video reviews.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.videoBlob || !formData.name) return;
