@@ -6,6 +6,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
+/**
+ * Crotus Pricing Component
+ *
+ * This component displays pricing plans and related information, including enterprise customization options,
+ * customer testimonials, and frequently asked questions.
+ *
+ * @returns {JSX.Element} - The rendered JSX element containing pricing information and other relevant content.
+ */
 const PricingSection = () => {
   const [billingPeriod, setBillingPeriod] = useState("monthly");
 
