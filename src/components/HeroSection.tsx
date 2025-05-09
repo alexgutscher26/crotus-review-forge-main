@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ShinyButton } from "@/components/shiny-button"
 
+/**
+ * A React functional component representing a hero section with branding and call-to-action elements.
+ */
 const HeroSection: React.FC = () => {
   return (
     <section className="relative py-16 md:py-24 overflow-hidden bg-white">
