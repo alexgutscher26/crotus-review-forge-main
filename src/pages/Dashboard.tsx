@@ -8,6 +8,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link } from "react-router-dom";
 import { LayoutDashboard, Star, Share, Users, Settings, ArrowLeft, Search, Plus, Filter, Check, X } from "lucide-react";
 
+/**
+ * React component that displays a list of reviews with different status (all, pending, approved, rejected).
+ * Provides buttons to filter the reviews and create new ones.
+ *
+ * @component ReviewList
+ * @param {Object} props - Component properties.
+ * @param {boolean} props.loading - Indicates if data is being loaded.
+ * @param {Array} props.reviews - List of all reviews.
+ * @param {Function} props.getAllReviews - Function to fetch all reviews.
+ * @param {Function} props.getPendingReviews - Function to fetch pending reviews.
+ * @param {Function} props.getApprovedReviews - Function to fetch approved reviews.
+ * @param {Function} props.getRejectedReviews - Function to fetch rejected reviews.
+ * @param {Function} props.createReview - Function to create a new review.
+ * @returns {JSX.Element} - JSX element representing the ReviewList component.
+ */
 const Dashboard: React.FC = () => {
   // Get real-time stats and reviews from Supabase
   const { stats: reviewStats, loading: statsLoading } = useReviewStats();
@@ -17,6 +32,9 @@ const Dashboard: React.FC = () => {
   const { reviews: rejectedReviews } = useReviews('rejected');
 
   // Get reviews based on selected tab
+  /**
+   * Retrieves reviews based on the specified tab.
+   */
   const getReviewsByTab = (tab: string) => {
     switch (tab) {
       case 'pending':
