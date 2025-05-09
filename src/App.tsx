@@ -27,6 +27,9 @@ import VideoReviewPage from "./pages/review/VideoReviewPage";
 
 const queryClient = new QueryClient();
 
+/**
+ * Defines the main App component with nested routing and providers.
+ */
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
