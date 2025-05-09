@@ -35,6 +35,10 @@ interface Review {
   platform: string;
 }
 
+/**
+ * React component that displays customer reviews with sorting and filtering options.
+ * Provides a preview tab for displaying reviews and a code tab for integration instructions.
+ */
 const wall: React.FC = () => {
   const [sortBy, setSortBy] = useState<string>("newest");
   const [filterRating, setFilterRating] = useState<string>("all");
@@ -72,6 +76,9 @@ const wall: React.FC = () => {
   ];
 
   // Filter and sort reviews
+  /**
+   * Filters and sorts reviews based on rating and sorting criteria.
+   */
   const getFilteredAndSortedReviews = () => {
     let filteredReviews = [...allReviews];
 
@@ -101,6 +108,9 @@ const wall: React.FC = () => {
 
   const reviews = getFilteredAndSortedReviews();
 
+  /**
+   * Renders a row of stars based on the given rating.
+   */
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, index) => (
       <Star
