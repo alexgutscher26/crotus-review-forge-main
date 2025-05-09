@@ -16,6 +16,9 @@ interface ReviewFormData {
   jobTitle: string;
 }
 
+/**
+ * A React functional component representing a review form with fields for rating, comment, name, and job title.
+ */
 const ReviewForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [formData, setFormData] = useState<ReviewFormData>({
     rating: 0,
@@ -24,6 +27,9 @@ const ReviewForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     jobTitle: ''
   });
 
+  /**
+   * Handles form submission, prevents default behavior, logs the form data, and closes the modal.
+   */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Submitting review:', formData);
@@ -113,6 +119,10 @@ const ReviewForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   );
 };
 
+/**
+ * Welcome page component for a review collection form.
+ * This component renders a welcome page with options to record quick videos and write reviews.
+ */
 const Welcome = () => {
   const [title, setTitle] = useState('Write a review');
   const [greetingText, setGreetingText] = useState(
@@ -121,11 +131,17 @@ const Welcome = () => {
   const [showGreetingImage, setShowGreetingImage] = useState(true);
   const [showGreetingVideo, setShowGreetingVideo] = useState(false);
 
+  /**
+   * Toggles the display of the greeting image and hides the greeting video if the image is shown.
+   */
   const handleGreetingImageChange = (checked: boolean) => {
     setShowGreetingImage(checked);
     if (checked) setShowGreetingVideo(false);
   };
 
+  /**
+   * Toggles greeting video visibility and hides greeting image if video is enabled.
+   */
   const handleGreetingVideoChange = (checked: boolean) => {
     setShowGreetingVideo(checked);
     if (checked) setShowGreetingImage(false);
@@ -133,6 +149,9 @@ const Welcome = () => {
   const [isQRDialogOpen, setIsQRDialogOpen] = useState(false);
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
 
+  /**
+   * Logs the welcome page settings to the console.
+   */
   const handleSave = () => {
     // TODO: Implement save functionality
     console.log('Saving welcome page settings:', {
