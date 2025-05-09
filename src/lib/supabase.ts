@@ -12,6 +12,9 @@ if (!supabaseUrl || !supabaseAnonKey) {
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
 
 // Authentication helper functions
+/**
+ * Signs up a user with the provided email and password.
+ */
 export const signUp = async (email: string, password: string) => {
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -20,6 +23,9 @@ export const signUp = async (email: string, password: string) => {
   return { data, error };
 };
 
+/**
+ * Signs in a user with the provided email and password.
+ */
 export const signIn = async (email: string, password: string) => {
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
@@ -28,22 +34,34 @@ export const signIn = async (email: string, password: string) => {
   return { data, error };
 };
 
+/**
+ * Signs out the current user and returns the result of the operation.
+ */
 export const signOut = async () => {
   const { error } = await supabase.auth.signOut();
   return { error };
 };
 
+/**
+ * Fetches and returns the current authenticated user from Supabase.
+ */
 export const getCurrentUser = async () => {
   const { data, error } = await supabase.auth.getUser();
   return { user: data.user, error };
 };
 
+/**
+ * Retrieves the current user session and any associated errors.
+ */
 export const getSession = async () => {
   const { data, error } = await supabase.auth.getSession();
   return { session: data.session, error };
 };
 
 // User profile functions
+/**
+ * Fetches a user profile by ID from the database.
+ */
 export const getUserProfile = async (userId: string) => {
   const { data, error } = await supabase
     .from('users')
@@ -53,6 +71,9 @@ export const getUserProfile = async (userId: string) => {
   return { profile: data, error };
 };
 
+/**
+ * Updates a user profile in the database.
+ */
 export const updateUserProfile = async (userId: string, updates: any) => {
   const { data, error } = await supabase
     .from('users')
@@ -61,6 +82,9 @@ export const updateUserProfile = async (userId: string, updates: any) => {
   return { data, error };
 };
 
+/**
+ * Creates a user profile in the database.
+ */
 export const createUserProfile = async (profile: any) => {
   const { data, error } = await supabase
     .from('users')
