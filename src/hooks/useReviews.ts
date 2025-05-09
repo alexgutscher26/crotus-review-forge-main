@@ -11,11 +11,17 @@ type Review = {
   status: 'approved' | 'pending' | 'rejected';
 };
 
+/**
+ * Custom hook to fetch and manage review data with optional status filtering.
+ */
 export const useReviews = (status?: 'approved' | 'pending' | 'rejected') => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  /**
+   * Fetches and processes reviews from the database, updating state with results.
+   */
   const fetchReviews = async () => {
     try {
       setLoading(true);
