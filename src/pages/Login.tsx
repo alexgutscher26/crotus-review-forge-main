@@ -6,6 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 
+/**
+ * React functional component representing a login page.
+ */
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,6 +17,9 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  /**
+   * Handles form submission, signs in a user, and navigates to the dashboard or shows an error message.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
