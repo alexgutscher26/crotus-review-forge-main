@@ -16,14 +16,10 @@ import ReviewsPage from "./pages/dashboard/ReviewsPage";
 import WallPage from "./pages/dashboard/WallPage";
 import SingleReviewPage from "./pages/dashboard/SingleReviewPage";
 import ApiKeyPage from "./pages/dashboard/ApiKeyPage";
-import Welcome from "./pages/dashboard/form/Welcome";
 import OnboardingPage from "./pages/Onboarding";
 import LoginPage from "./pages/Login";
 import SignupPage from "./pages/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
-import ReviewLandingPage from "./pages/review/ReviewLandingPage";
-import TextReviewPage from "./pages/review/TextReviewPage";
-import VideoReviewPage from "./pages/review/VideoReviewPage";
 
 const queryClient = new QueryClient();
 
@@ -50,16 +46,11 @@ const App = () => (
                 <Route path="wall" element={<WallPage />} />
                 <Route path="single" element={<SingleReviewPage />} />
                 <Route path="api" element={<ApiKeyPage />} />
-                <Route path="form/welcome" element={<Welcome />} />
               </Route>
               <Route path="/onboarding" element={<OnboardingPage />} />
             </Route>
 
-            {/* Public Review Routes */}
-            <Route path="/review/:id" element={<ReviewLandingPage />} />
-            <Route path="/review/:id/text" element={<TextReviewPage />} />
-            <Route path="/review/:id/video" element={<VideoReviewPage />} />
-          
+        
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />
           </Routes>
