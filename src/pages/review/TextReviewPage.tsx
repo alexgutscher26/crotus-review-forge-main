@@ -14,6 +14,9 @@ interface ReviewFormData {
   jobTitle: string;
 }
 
+/**
+ * Functional component representing a review submission page.
+ */
 const ReviewPage = () => {
   const { id } = useParams();
   const [formData, setFormData] = React.useState<ReviewFormData>({
@@ -23,6 +26,9 @@ const ReviewPage = () => {
     jobTitle: ''
   });
 
+  /**
+   * Handles form submission by preventing default behavior and logging review data.
+   */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Submitting review:', { ...formData, reviewId: id });
