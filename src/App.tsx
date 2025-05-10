@@ -20,6 +20,7 @@ import OnboardingPage from "./pages/Onboarding";
 import LoginPage from "./pages/Login";
 import SignupPage from "./pages/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
+import FormEditorPage from "./pages/dashboard/FormEditorPage";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +47,7 @@ const App = () => (
                 <Route path="wall" element={<WallPage />} />
                 <Route path="single" element={<SingleReviewPage />} />
                 <Route path="api" element={<ApiKeyPage />} />
+                <Route path="form/welcome" element={<FormEditorPage />} />
               </Route>
               <Route path="/onboarding" element={<OnboardingPage />} />
             </Route>
