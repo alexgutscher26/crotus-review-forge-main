@@ -1,12 +1,26 @@
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import { Link } from 'react-router-dom';
+=======
+>>>>>>> c67b1c6ca365df357e090dfddbce93b0c88c5fae
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
+<<<<<<< HEAD
 import { Save } from "lucide-react";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+=======
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+>>>>>>> c67b1c6ca365df357e090dfddbce93b0c88c5fae
 
 interface FormConfig {
   title: string;
@@ -15,6 +29,7 @@ interface FormConfig {
   showGreetingVideo: boolean;
 }
 
+<<<<<<< HEAD
 interface SaveStatus {
   saving: boolean;
   saved: boolean;
@@ -26,10 +41,18 @@ const FormEditorPage: React.FC = () => {
     title: "Write a review",
     greetingText: "Hey there! 👋 By sharing your honest feedback, you can help other people decide if my product is right for them.",
     showGreetingImage: true,
+=======
+const FormEditorPage: React.FC = () => {
+  const [formConfig, setFormConfig] = useState<FormConfig>({
+    title: "Write a review",
+    greetingText: "Hey there! 👋 By sharing your honest feedback, you can help other people decide if my product is right for them.",
+    showGreetingImage: false,
+>>>>>>> c67b1c6ca365df357e090dfddbce93b0c88c5fae
     showGreetingVideo: false
   });
 
   const handleConfigChange = (key: keyof FormConfig, value: string | boolean) => {
+<<<<<<< HEAD
     setFormConfig(prev => {
       // If enabling video, disable image and vice versa
       if (key === 'showGreetingVideo' && value === true) {
@@ -50,6 +73,12 @@ const FormEditorPage: React.FC = () => {
     setSaveStatus({ saving: false, saved: true });
     // Reset saved status after 2 seconds
     setTimeout(() => setSaveStatus({ saving: false, saved: false }), 2000);
+=======
+    setFormConfig(prev => ({
+      ...prev,
+      [key]: value
+    }));
+>>>>>>> c67b1c6ca365df357e090dfddbce93b0c88c5fae
   };
 
   return (
@@ -58,11 +87,19 @@ const FormEditorPage: React.FC = () => {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
+<<<<<<< HEAD
             <Link to="/dashboard" className="text-sm font-medium hover:underline">Dashboard</Link>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <Link to="/dashboard/form" className="text-sm font-medium hover:underline">Form</Link>
+=======
+            <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/dashboard/form">Form</BreadcrumbLink>
+>>>>>>> c67b1c6ca365df357e090dfddbce93b0c88c5fae
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -126,6 +163,7 @@ const FormEditorPage: React.FC = () => {
                   </Button>
                 )}
               </div>
+<<<<<<< HEAD
               <div className="pt-6 border-t">
                 <Button
                   className="w-full flex items-center justify-center gap-2"
@@ -136,6 +174,8 @@ const FormEditorPage: React.FC = () => {
                   {saveStatus.saving ? 'Saving...' : saveStatus.saved ? 'Saved!' : 'Save changes'}
                 </Button>
               </div>
+=======
+>>>>>>> c67b1c6ca365df357e090dfddbce93b0c88c5fae
             </CardContent>
           </Card>
         </div>
