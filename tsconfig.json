@@ -15,27 +15,31 @@
         "./src/*"
       ]
     },
-    "noImplicitAny": false,
-    "noUnusedParameters": false,
-    "skipLibCheck": true,
-    "allowJs": true,
-    "noUnusedLocals": false,
-    "strictNullChecks": false,
     "target": "ES2017",
+    "module": "esnext",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
-    "strict": false,
-    "noEmit": true,
-    "incremental": true,
-    "module": "esnext",
-    "esModuleInterop": true,
+    "jsx": "preserve",
+    "declaration": true,
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "noEmit": true,
+    "incremental": true,
+
+    "strict": false,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "noUnusedParameters": false,
+    "noUnusedLocals": false,
+    
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true
   },
   "include": [
     "next-env.d.ts",
