@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,6 +15,7 @@ import ReviewsPage from "./pages/dashboard/ReviewsPage";
 import WallPage from "./pages/dashboard/WallPage";
 import SingleReviewPage from "./pages/dashboard/SingleReviewPage";
 import ApiKeyPage from "./pages/dashboard/ApiKeyPage";
+import FormEditorPage from "./pages/dashboard/FormEditorPage";
 import OnboardingPage from "./pages/Onboarding";
 import LoginPage from "./pages/Login";
 import SignupPage from "./pages/Signup";
@@ -46,11 +46,11 @@ const App = () => (
                 <Route path="wall" element={<WallPage />} />
                 <Route path="single" element={<SingleReviewPage />} />
                 <Route path="api" element={<ApiKeyPage />} />
+                <Route path="form/welcome" element={<FormEditorPage />} />
               </Route>
               <Route path="/onboarding" element={<OnboardingPage />} />
             </Route>
 
-        
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />
           </Routes>
