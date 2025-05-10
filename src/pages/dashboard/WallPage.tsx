@@ -40,23 +40,14 @@ interface Review {
   rating: number;
   reviewText: string;
   date: string;
-  platform: string;
   verified?: boolean;
 }
 
 const WallPage = () => {
   const [sortBy, setSortBy] = useState<string>("newest");
   const [filterRating, setFilterRating] = useState<string>("all");
-  const [filterPlatform, setFilterPlatform] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [platformFilters, setPlatformFilters] = useState<Record<string, boolean>>({
-    All: true,
-    Google: true,
-    Trustpilot: true,
-    Yelp: true,
-    Direct: true,
-  });
   const [expandedReviews, setExpandedReviews] = useState<Record<string, boolean>>({});
   const [viewMode, setViewMode] = useState<string>("grid");
 
@@ -69,7 +60,6 @@ const WallPage = () => {
       rating: 5,
       reviewText: "Absolutely love this service! It has streamlined our review collection process and helped us showcase our customer feedback beautifully. The interface is so intuitive that even our less tech-savvy team members got the hang of it quickly.",
       date: "2024-02-15",
-      platform: "Direct",
       verified: true
     },
     {
@@ -78,8 +68,7 @@ const WallPage = () => {
       avatar: "/api/placeholder/40/40",
       rating: 4,
       reviewText: "Great platform for managing customer reviews. The interface is intuitive and the features are exactly what we needed. I especially appreciate the export options and analytics dashboard.",
-      date: "2024-02-08",
-      platform: "Google"
+      date: "2024-02-08"
     },
     {
       id: "3",
@@ -88,7 +77,6 @@ const WallPage = () => {
       rating: 5,
       reviewText: "This tool has helped us build trust with potential customers by showcasing authentic reviews. Highly recommended! Our conversion rate improved by 27% within the first month of implementation.",
       date: "2024-01-29",
-      platform: "Direct",
       verified: true
     },
     {
@@ -97,8 +85,7 @@ const WallPage = () => {
       avatar: "/api/placeholder/40/40",
       rating: 5,
       reviewText: "The Wall of Love feature has significantly increased our conversion rates. Customers trust us more when they see real reviews. The customization options are extensive and allowed us to match our brand perfectly.",
-      date: "2024-01-22",
-      platform: "Trustpilot"
+      date: "2024-01-22"
     },
     {
       id: "5",
@@ -106,8 +93,7 @@ const WallPage = () => {
       avatar: "/api/placeholder/40/40",
       rating: 4,
       reviewText: "Easy to set up and customize. We've integrated it into our homepage and it looks fantastic. Would like to see more animation options in the future.",
-      date: "2024-01-14",
-      platform: "Yelp"
+      date: "2024-01-14"
     },
     {
       id: "6",
@@ -115,8 +101,7 @@ const WallPage = () => {
       avatar: "/api/placeholder/40/40",
       rating: 3,
       reviewText: "Good service overall. Would like to see more customization options for the display layout. The customer support was responsive when I had questions about implementation.",
-      date: "2024-01-05",
-      platform: "Direct"
+      date: "2024-01-05"
     },
     {
       id: "7",
@@ -125,7 +110,6 @@ const WallPage = () => {
       rating: 5,
       reviewText: "I've tried several review management tools and this is by far the best. The Wall of Love component integrates seamlessly with our existing design and the automatic review collection saves us hours of work every week.",
       date: "2024-01-12",
-      platform: "Google",
       verified: true
     },
     {
@@ -134,8 +118,7 @@ const WallPage = () => {
       avatar: "/api/placeholder/40/40",
       rating: 4,
       reviewText: "Very satisfied with the functionality and ease of use. The only thing I'd suggest improving is adding more advanced filtering options for larger review volumes.",
-      date: "2024-01-18",
-      platform: "Trustpilot"
+      date: "2024-01-18"
     },
     {
       id: "9",
@@ -144,7 +127,6 @@ const WallPage = () => {
       rating: 5,
       reviewText: "This platform transformed how we display testimonials on our site. The analytics provided give us valuable insights into which reviews resonate most with our visitors.",
       date: "2024-02-01",
-      platform: "Yelp",
       verified: true
     }
   ];
@@ -187,13 +169,6 @@ const WallPage = () => {
       );
     }
 
-    // Apply platform filters
-    if (filterPlatform !== 'all') {
-      filteredReviews = filteredReviews.filter(
-        (review) => review.platform === filterPlatform
-      );
-    }
-
     // Apply sorting
     return filteredReviews.sort((a, b) => {
       switch (sortBy) {
@@ -212,7 +187,6 @@ const WallPage = () => {
   };
 
   const reviews = getFilteredAndSortedReviews();
-  const uniquePlatforms = Array.from(new Set(allReviews.map(review => review.platform)));
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, index) => (
@@ -261,12 +235,6 @@ const WallPage = () => {
               </div>
               <div className="flex items-center gap-2 mt-1">
                 <div className="flex">{renderStars(review.rating)}</div>
-                {review.platform !== 'Direct' && (
-                  <span className="text-xs text-gray-500 flex items-center gap-1">
-                    via {review.platform}
-                    <ExternalLink className="h-3 w-3" />
-                  </span>
-                )}
               </div>
             </div>
           </div>
@@ -292,24 +260,6 @@ const WallPage = () => {
               </button>
             )}
           </div>
-          
-          {/* Platform badge */}
-          <div className="mt-4 flex items-center justify-between">
-            <Badge 
-              variant="outline" 
-              className={`${
-                review.platform === 'Google' 
-                  ? 'bg-blue-50 text-blue-600' 
-                  : review.platform === 'Trustpilot' 
-                  ? 'bg-green-50 text-green-600'
-                  : review.platform === 'Yelp'
-                  ? 'bg-red-50 text-red-600'
-                  : 'bg-purple-50 text-purple-600'
-              }`}
-            >
-              {review.platform}
-            </Badge>
-          </div>
         </CardContent>
       </Card>
     );
@@ -334,9 +284,6 @@ const WallPage = () => {
           <Skeleton className="h-4 w-5/6" />
           <Skeleton className="h-4 w-4/6" />
         </div>
-        <div className="mt-4">
-          <Skeleton className="h-6 w-20" />
-        </div>
       </CardContent>
     </Card>
   );
@@ -358,7 +305,6 @@ export default function ReviewWall() {
       filtering={{
         enabled: true,
         ratings: true,
-        platforms: true, // Filter by review source
         search: true, // Enable text search
         verified: true // Filter by verified status
       }}
@@ -496,20 +442,6 @@ export default function ReviewWall() {
                 </SelectContent>
               </Select>
 
-              <Select value={filterPlatform} onValueChange={setFilterPlatform}>
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="Platform" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Platforms</SelectItem>
-                  {uniquePlatforms.map((platform) => (
-                    <SelectItem key={platform} value={platform}>
-                      {platform}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="default" className="gap-2">
@@ -519,22 +451,11 @@ export default function ReviewWall() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
                   <DropdownMenuCheckboxItem
-                    checked={platformFilters.All}
-                    onCheckedChange={(checked) => 
-                      setPlatformFilters(prev => ({ ...prev, All: checked }))}
+                    checked={true}
+                    onCheckedChange={() => {}}
                   >
-                    All Platforms
+                    Verified Reviews
                   </DropdownMenuCheckboxItem>
-                  {uniquePlatforms.map((platform) => (
-                    <DropdownMenuCheckboxItem
-                      key={platform}
-                      checked={platformFilters[platform]}
-                      onCheckedChange={(checked) => 
-                        setPlatformFilters(prev => ({ ...prev, [platform]: checked }))}
-                    >
-                      {platform}
-                    </DropdownMenuCheckboxItem>
-                  ))}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -598,7 +519,7 @@ export default function ReviewWall() {
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h4 className="font-medium mb-2 text-green-600">Data Management</h4>
                     <ul className="list-disc list-inside space-y-1 text-sm text-gray-600">
-                      <li>Automatic review collection from multiple platforms</li>
+                      <li>Automatic review collection</li>
                       <li>Review moderation tools</li>
                       <li>Review insights and analytics</li>
                       <li>API for custom integration</li>
